@@ -19,6 +19,17 @@ export const imamType = defineType({
       ],
     }),
     defineField({
+      name: "backgroundImage",
+      type: "image",
+      fields: [
+        defineField({
+          name: "alt",
+          type: "string",
+          title: "Alternative text",
+        }),
+      ],
+    }),
+    defineField({
       name: "name",
       type: "string",
     }),
@@ -44,9 +55,18 @@ export const imamType = defineType({
       type: "array",
       of: [
         {
-          type: "string"
-        }
-      ]
-    })
+          type: "string",
+        },
+      ],
+    }),
+    defineField({
+      name: "bio",
+      type: "array",
+      of: [
+        {
+          type: "block",
+        },
+      ],
+    }),
   ],
 });

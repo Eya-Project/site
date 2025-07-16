@@ -72,11 +72,35 @@ const getHeroData = async (): Promise<HeroData | null> => {
 
 const getMapData = async (): Promise<MapData | null> => {
   try {
-    const data = await client.fetch<Array<CountryType>>(`*[_type == "country"]{
+    const data = await client.fetch<
+      Array<CountryType & { count: number }>
+    >(`*[_type == "country"]{
         name,
         latitude,
         longitude
     }`);
+
+    // Get Number of Imams in each country
+
+    const imamsCount = await client.fetch(`*[_type == "imam"]{
+      country -> {
+        name
+      }
+    }`);
+
+    const countryCounts: Record<string, number> = {};
+
+    imamsCount.forEach((imam: { country: { name: string } }) => {
+      const countryName = imam.country.name;
+      if (countryName) {
+        countryCounts[countryName] = (countryCounts[countryName] || 0) + 1;
+      }
+    });
+
+    // Add the count to each countryCounts
+    data.forEach((country) => {
+      country.count = countryCounts[country.name] || 0;
+    });
 
     return { countries: data };
   } catch (error) {

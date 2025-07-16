@@ -1,32 +1,46 @@
-import Image from "next/image"
+"use client";
+
 import {
   AdvancedMarker,
+  InfoWindow,
+  useAdvancedMarkerRef,
 } from "@vis.gl/react-google-maps";
-import { FC } from "react";
-import { Dialog, DialogTrigger } from "../../ui/dialog"
+import { FC, useCallback, useState } from "react";
 
-interface Props {
+interface MarkerWithInfoWindowProps {
   lat: number;
   lng: number;
   name: string;
 }
 
-const MapMarker: FC<Props> = ({ lat, lng }) => {
+const MapMarker: FC<MarkerWithInfoWindowProps> = ({ lat, lng, name }) => {
+  const [markerRef, marker] = useAdvancedMarkerRef();
+
+  const [infoWindowShown, setInfoWindowShown] = useState(false);
+
+  // clicking the marker will toggle the infowindow
+  const handleMarkerClick = useCallback(
+    () => setInfoWindowShown((isShown) => !isShown),
+    [],
+  );
+
+  // if the maps api closes the infowindow, we have to synchronize our state
+  const handleClose = useCallback(() => setInfoWindowShown(false), []);
 
   return (
-    <Dialog>
-      <DialogTrigger>
-        <AdvancedMarker
-          position={{
-            lat,
-            lng,
-          }}
-        >
-          <Image src={"/location.svg"} alt="Location Marker" width={40} height={80} />
-        </AdvancedMarker>
-      </DialogTrigger>
+    <>
+      <AdvancedMarker
+        ref={markerRef}
+        position={{ lat, lng }}
+        onClick={handleMarkerClick}
+      />
 
-    </Dialog>
+      {infoWindowShown && (
+        <InfoWindow anchor={marker} onClose={handleClose}>
+          <h2>{name}</h2>
+        </InfoWindow>
+      )}
+    </>
   );
 };
 

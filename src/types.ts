@@ -5,6 +5,7 @@ export type CountryType = {
 };
 
 export type ImamType = {
+  imamId: string;
   name: string;
   profileImage: {
     alt: string;
@@ -14,5 +15,10 @@ export type ImamType = {
   email?: string;
   phone?: string;
   country: CountryType;
-  specials: Array<string>
+  specials: Array<string>;
+};
+
+export type FullImamType = ImamType & {
+  backgroundImage?: { alt: string; url: string };
+  bio: any;
 };

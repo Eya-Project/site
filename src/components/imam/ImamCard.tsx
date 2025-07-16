@@ -1,9 +1,11 @@
 import { ImamType } from "@/types"
 import Image from "next/image"
+import Link from "next/link"
 import { FC } from "react"
 
-const ImamCard: FC<ImamType> = ({ name, email, phone, profileImage, description, country, specials }) => {
+const ImamCard: FC<ImamType> = ({ imamId, name, email, phone, profileImage, description, country, specials }) => {
   return (
+    <Link href={`/woman-imam/${imamId}`}>
     <div className="border drop-shadow-md container flex flex-col md:flex-row overflow-hidden h-[300px] rounded-2xl md:w-[800px]">
       <div className="w-full md:w-1/2 overflow-hidden">
         <Image src={profileImage.url} alt={profileImage.alt} width={200} height={300} className="w-full h-full object-cover" />
@@ -21,6 +23,7 @@ const ImamCard: FC<ImamType> = ({ name, email, phone, profileImage, description,
         </div>
       </div>
     </div>
+  </Link>
   )
 }
 
